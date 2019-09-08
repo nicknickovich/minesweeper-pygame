@@ -6,6 +6,8 @@ class Settings:
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 600
 
+        self.NUM_BOMBS = 15
+
         # colors
         self.BLACK = 0, 0, 0
         self.WHITE = 255, 255, 255
@@ -22,10 +24,12 @@ class Settings:
 
         # tiles
         self.SCALING_FACTOR = 40 / 62 
+        # pictures for numbers, named tileX
         for i in range(9):
             setattr(self, "tile" + str(i), self.resize_img(pygame.image.load("images/" + str(i) + ".png")))
         self.closed_tile = self.resize_img(pygame.image.load("images/closed.png"))
         self.bomb_tile = self.resize_img(pygame.image.load("images/bomb.png"))
+        self.flag_tile = self.resize_img(pygame.image.load("images/flag.png"))
 
         # fps for clock
         self.FPS = 60

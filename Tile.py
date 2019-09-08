@@ -8,13 +8,15 @@ class Tile(Settings):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.type = "tile0"
-        self.state = True
+        self.state = "closed"
 
     def draw_tile(self):
-        if self.state:
+        if self.state == "open":
             if self.type == "bomb":
                 self.screen.blit(self.bomb_tile, (self.x, self.y))
             else:
-                self.screen.blit(getattr(self, "tile" + str(self.type)), (self.x, self.y))
+                self.screen.blit(getattr(self, self.type), (self.x, self.y))
+        elif self.state == "flag":
+            self.screen.blit(self.flag_tile, (self.x, self.y))
         else:
             self.screen.blit(self.closed_tile, (self.x, self.y))
