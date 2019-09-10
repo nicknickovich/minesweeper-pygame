@@ -7,7 +7,13 @@ class GameGrid(Settings):
         super().__init__()
         self.screen = screen
         self.tiles_map = []
+        self.num_flags = 0
+        self.game_over = False
+        self.won = False
 
+    # ====================================
+    # METHODS FOR SETTING UP THE GAME GRID
+    # ====================================
 
     def setup_game_grid(self):
         self.generate_grid()
@@ -17,6 +23,9 @@ class GameGrid(Settings):
     def reset_grid(self):
         self.tiles_map = []
         self.setup_game_grid()
+        self.num_flags = 0
+        self.game_over = False
+        self.won = False
         
     # generate grid with empty tile objects
     def generate_grid(self):
@@ -64,18 +73,18 @@ class GameGrid(Settings):
                     if y < 9:
                         bomb_count += self.check_bomb(y+1, x)
                     self.tiles_map[y][x].type = "tile" + str(bomb_count)
-                        
-                        
+
     def check_bomb(self, y, x):
         if self.tiles_map[y][x].type == "bomb":
             return 1
         return 0
 
-    def draw_grid(self):
-        for row in self.tiles_map:
-            for tile in row:
-                tile.draw_tile()
-
+    # =================================
+    # METHODS FOR IN-GAME FUNCTIONALITY    
+    # =================================          
+    
+    # if tile is blank open all tiles around it
+    # and do it until there are blank tiles around it
     def open_around_blanks(self, tile):
         if tile.state == "closed" and tile.type == "tile0":
             x = tile.pos_x
@@ -108,3 +117,59 @@ class GameGrid(Settings):
             for tile in row:
                 if tile.type == "bomb":
                     tile.state = "open"
+
+    def check_win(self):
+        open_tiles = []
+        for row in self.tiles_map:
+            for tile in row:
+                if tile.type != "bomb" and tile.state == "open":
+                    open_tiles.append(tile)
+        if len(open_tiles) == self.NUM_ROWS * self.NUM_COLS - self.NUM_BOMBS:
+            self.won = True
+
+    # ===================
+    # METHODS FOR DRAWING
+    # ===================
+
+    def draw_game(self):
+        self.draw_grid()
+        self.draw_legend()
+
+    def draw_grid(self):
+        for row in self.tiles_map:
+            for tile in row:
+                tile.draw_tile()
+
+    # displays the number of bombs on the grid and current number of flags
+    def draw_legend(self):
+        font = pygame.font.SysFont(None, 32)
+        bomb_text = font.render("Bombs:" + str(self.NUM_BOMBS), True, self.WHITE)
+        self.screen.blit(bomb_text, (50, 150))
+
+        font = pygame.font.SysFont(None, 32)
+        flag_text = font.render("Flags:" + str(self.num_flags), True, self.WHITE)
+        self.screen.blit(flag_text, (50, 200))
+
+    def draw_game_over(self):
+        font = pygame.font.SysFont(None, 64)
+        text = font.render("GAME OVER", True, self.RED)
+        text_rect = text.get_rect()
+        text_rect.center = (self.WINDOW_WIDTH / 2, self.WINDOW_HEIGHT / 10)
+        self.screen.blit(text, text_rect)
+        self.draw_press_button_msg()
+    
+    def draw_win(self):
+        font = pygame.font.SysFont(None, 64)
+        text = font.render("YOU WIN", True, self.GREEN)
+        text_rect = text.get_rect()
+        text_rect.center = (self.WINDOW_WIDTH / 2, self.WINDOW_HEIGHT / 10)
+        self.screen.blit(text, text_rect)
+        self.draw_press_button_msg()
+
+    def draw_press_button_msg(self):
+        font = pygame.font.SysFont(None, 48)
+        text = font.render("press space or enter to play again", True, self.WHITE)
+        text_rect = text.get_rect()
+        text_rect.center = (self.WINDOW_WIDTH / 2, self.WINDOW_HEIGHT * 9 / 10)
+        self.screen.blit(text, text_rect)
+

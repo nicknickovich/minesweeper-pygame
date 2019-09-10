@@ -2,11 +2,14 @@ from Settings import Settings
 class Tile(Settings):
     def __init__(self, screen, x, y, pos_x, pos_y):
         super().__init__()
+        # tile position in pixels
         self.x = x
         self.y = y
-        self.screen = screen
+        # tile position in the grid
         self.pos_x = pos_x
         self.pos_y = pos_y
+        
+        self.screen = screen
         self.type = "tile0"
         self.state = "closed"
 
