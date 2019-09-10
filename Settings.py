@@ -13,7 +13,6 @@ class Settings:
         self.WHITE = 255, 255, 255
         self.RED = 255, 0, 0
         self.GREEN = 0, 255, 0
-        self.GREY = 128, 128, 128
 
         # grid settings
         self.OFFSET_LEFT = 200
@@ -24,7 +23,7 @@ class Settings:
 
         # tiles
         self.SCALING_FACTOR = 40 / 62 
-        # pictures for numbers, named tileX
+        # pictures for numbers, named tile0 - tile 8
         for i in range(9):
             setattr(self, "tile" + str(i), self.resize_img(pygame.image.load("images/" + str(i) + ".png")))
         self.closed_tile = self.resize_img(pygame.image.load("images/closed.png"))
