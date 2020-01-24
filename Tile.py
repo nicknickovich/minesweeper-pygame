@@ -1,11 +1,16 @@
-from Settings import Settings
+from settings import Settings
+
+
 class Tile(Settings):
+    """Single tile with its position on display and on the grid.
+    Created with default 'blank' type and 'closed' state.
+    """
     def __init__(self, screen, x, y, pos_x, pos_y):
         super().__init__()
         # tile position in pixels
         self.x = x
         self.y = y
-        # tile position in the grid
+        # tile position on the grid
         self.pos_x = pos_x
         self.pos_y = pos_y
         
@@ -14,6 +19,7 @@ class Tile(Settings):
         self.state = "closed"
 
     def draw_tile(self):
+        """Draw tile depending on its state and type."""
         if self.state == "open":
             if self.type == "bomb":
                 self.screen.blit(self.bomb_tile, (self.x, self.y))
